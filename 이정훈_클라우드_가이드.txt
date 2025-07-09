@@ -1,0 +1,54 @@
+vpc 생성: 
+team20-vpc => 10.7.0.0/16
+
+=============
+
+서브넷 생성: 
+public
+team20-public-subnet-1 =>az: az-a 10.7.10.0/24
+team20-public-subnet-2 =>az: az-b 10.7.20.0/24
+team20-public-subnet-3 =>az: az-c 10.7.30.0/24
+team20-public-subnet-4 =>az: az-d 10.7.40.0/24
+
+서브넷 public은 자동활성화 설정
+
+private
+team20-private-subnet-1 =>az: az-a 10.7.1.0/24
+team20-private-subnet-2 =>az: az-b 10.7.2.0/24
+team20-private-subnet-3 =>az: az-c 10.7.3.0/24
+team20-private-subnet-4 =>az: az-d 10.7.4.0/24
+
+======================
+
+인터넷게이트웨이:
+team20-igw 
+team20-public-subnet-1
+team20-public-subnet-2
+team20-public-subnet-3 
+team20-public-subnet-4
+
+nat 게이트웨이:
+team20-public-subnet-1
+라우팅 테이블 설정: team20-pri-rt
+
+=======================
+인스턴스
+
+Bastion서버 생성: team20-Bastion =>team20-public-subnet-1할당
+보안그룹 team20-bastion-sg: 외부 SSH 허용
+
+Web1 서버생성: team20-Web1 =>team20-private-subnet-2 할당
+보안그룹 team20-Web1-sg: 바스티온 sg id 허용
+
+Web2 서버생성: team20-Web2 =>team20-private-subnet3 할당
+보안그룹 team20-Web2-sg: 바스티온 sg id 허용
+
+Web3 서버생성: team20-web3 =>team20-private-subnet4 할당
+보안그룹 team20-Web3-sg: 바스티온 sg id 허용
+
+========
+로드밸런서
+
+로드밸런서 생성: team20-lb-sg
+보안그룹 team20-lb-sg: http 0.0.0.0/0
+대상그룹: team20-targetgroup => web1,web2,web3
